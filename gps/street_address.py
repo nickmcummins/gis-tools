@@ -1,5 +1,5 @@
+from lxml import etree
 from gpxpy.gpx import GPX, GPXTrackPoint
-
 from gps.gps_address_converter import GPSAddressConverter
 
 
@@ -15,4 +15,6 @@ class StreetAddress:
         gpx = GPX()
         gps = self.to_gps_coordinates()
         gpx.waypoints.append(GPXTrackPoint(gps['lat'], gps['lng']))
-        return gpx.to_xml()
+        gpx_xml = gpx.to_xml()
+        return etree.tostring(etree.fromstring(gpx_xml.encode('utf-8'), parser=etree.XMLParser(encoding='utf-8')),
+                              pretty_print=True).decode('utf-8')
