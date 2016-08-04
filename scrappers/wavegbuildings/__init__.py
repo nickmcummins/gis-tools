@@ -10,4 +10,7 @@ if __name__ == '__main__':
     bsObj = BeautifulSoup(html, "lxml")
     bldg_group = bsObj.find("h2", {"id": "wa_seattle"}).findNext()
     buildings = BuildingGroup.from_bs(bldg_group)
-    print(buildings)
+
+    file = open("/home/nick/GPS/waveg-buildings.gpx", "w")
+    file.write(buildings.to_gpx())
+    file.close()
