@@ -9,7 +9,7 @@ if __name__ == '__main__':
     html = urlopen("http://www.nickmcummins.com/waveg-buildings.html")
     bsObj = BeautifulSoup(html, "lxml")
     bldg_group = bsObj.find("h2", {"id": "wa_seattle"}).findNext()
-    buildings = BuildingGroup.from_bs(bldg_group)
+    buildings = BuildingGroup(bldg_group)
 
     file = open("/home/nick/GPS/waveg-buildings.gpx", "w")
     file.write(buildings.to_gpx())

@@ -1,27 +1,23 @@
 from gpxpy.gpx import GPX
 from lxml import etree
 
+from gps.gps_address_converter import GPSAddressConverter
 from scrappers.wavegbuildings.building import Building
 
 
 class BuildingGroup:
     def __init__(self, bs_obj):
-        self.buildings = []
-        self.bs_obj = bs_obj
+        self.buildings = self.parse(bs_obj)
 
     @staticmethod
-    def from_bs(bldg_group_bs):
-        building_group = BuildingGroup(bldg_group_bs)
-        building_group.parse()
-        return building_group
-
-    def parse(self):
-        buildings_tag = self.bs_obj.findAll("div", {"class": "bldg_cel"})
+    def parse(bldg_group_soup):
+        buildings_tag = bldg_group_soup.findAll("div", {"class": "bldg_cel"})
         buildings = []
+        geocoder = GPSAddressConverter()
         for building_tag in buildings_tag:
-            buildings.append(Building.from_tag(building_tag))
+            buildings.append(Building.from_tag(building_tag, geocoder))
 
-        self.buildings = buildings
+        return buildings
 
     def __str__(self):
         return '\n'.join(list(map(str, self.buildings)))
