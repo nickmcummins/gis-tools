@@ -13,7 +13,7 @@ def stateplane_to_latlon(x1, y1):
     out_proj = Proj(init='epsg:4326')
 
     x2, y2 = transform(in_proj, out_proj, x1, y1)
-    return x2, y2
+    return y2, x2
 
 
 def csv_line_to_gpx(csv_line):
