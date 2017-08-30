@@ -1,7 +1,7 @@
 import glob
 from lxml import etree
 
-from gpxpy.gpx import GPX, GPXTrackPoint
+from gpxpy.gpx import GPX
 
 from scrappers.famousredwoods.redwoodhtmlpage import RedwoodHTMLPage
 
@@ -15,11 +15,7 @@ if __name__ == '__main__':
     for html_file in redwood_html_pages:
         try:
             redwood_html_page = RedwoodHTMLPage(html_file)
-            waypoint = GPXTrackPoint(redwood_html_page.gps_latitude(), redwood_html_page.gps_longitude())
-            waypoint.name = redwood_html_page.title()
-            waypoint.symbol = "wpt_46"
-
-            gpx.waypoints.append(waypoint)
+            gpx.waypoints.append(redwood_html_page.to_gpx_trackpoint())
         except (IndexError, AttributeError):
             print("Skipping " + html_file)
 
@@ -27,5 +23,5 @@ if __name__ == '__main__':
         etree.fromstring(gpx.to_xml().encode('utf-8'), parser=etree.XMLParser(encoding='utf-8')),
         pretty_print=True).decode('utf-8')
 
-    gpx_file = open('famousredwood-trees.gpx', 'w')
+    gpx_file = open('famousredwood-trees-with-descriptions.gpx', 'w')
     gpx_file.write(gpx_string)
